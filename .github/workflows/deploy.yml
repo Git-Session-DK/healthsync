@@ -36,5 +36,13 @@ jobs:
       run: aws eks update-kubeconfig --name healthsync-cluster --region ap-south-1
 
     - name: Deploy to EKS
+      env:
+        GITHUB_SHA: ${{ github.sha }}
       run: |
-        kubectl apply -f kubernetes/
+        envsubst < kubernetes/patient-service-blue.yml | kubectl apply -f -
+        envsubst < kubernetes/patient-service-green.yml | kubectl apply -f -
+        envsubst < kubernetes/appointment-service-blue.yml | kubectl apply -f -
+        envsubst < kubernetes/appointment-service-green.yml | kubectl apply -f -
+        envsubst < kubernetes/notification-service-blue.yml | kubectl apply -f -
+        envsubst < kubernetes/notification-service-green.yml | kubectl apply -f -
+        kubectl apply -f kubernetes/router-services.yml
