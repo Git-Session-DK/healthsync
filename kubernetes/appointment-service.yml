@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: appointment-service
-        image: ${ECR_REGISTRY}/healthsync-appointment-service:${GITHUB_SHA}
+        image: 961341545391.dkr.ecr.ap-south-1.amazonaws.com/healthsync-appointment-service:${GITHUB_SHA}
         ports:
         - containerPort: 8080
 ---
