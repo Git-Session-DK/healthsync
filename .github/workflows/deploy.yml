@@ -22,15 +22,15 @@ jobs:
 
     - name: Build and push images
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REGISTRY: 961341545391.dkr.ecr.ap-south-1.amazonaws.com
       run: |
-        docker build -t $ECR_REGISTRY/patient-record-service:$GITHUB_SHA ./patient_record_service
-        docker build -t $ECR_REGISTRY/appointment-scheduling-service:$GITHUB_SHA ./appointment_scheduling_service
-        docker build -t $ECR_REGISTRY/notification-service:$GITHUB_SHA ./notification_service
-        docker push $ECR_REGISTRY/patient-record-service:$GITHUB_SHA
-        docker push $ECR_REGISTRY/appointment-scheduling-service:$GITHUB_SHA
-        docker push $ECR_REGISTRY/notification-service:$GITHUB_SHA
-
+        docker build -t $ECR_REGISTRY/healthsync-patient-service:$GITHUB_SHA ./patient_record_service
+        docker build -t $ECR_REGISTRY/healthsync-appointment-service:$GITHUB_SHA ./appointment_scheduling_service
+        docker build -t $ECR_REGISTRY/healthsync-notification-service:$GITHUB_SHA ./notification_service
+        docker push $ECR_REGISTRY/healthsync-patient-service:$GITHUB_SHA
+        docker push $ECR_REGISTRY/healthsync-appointment-service:$GITHUB_SHA
+        docker push $ECR_REGISTRY/healthsync-notification-service:$GITHUB_SHA
+      
     - name: Update kube config
       run: aws eks update-kubeconfig --name healthsync-cluster --region us-west-2
 
