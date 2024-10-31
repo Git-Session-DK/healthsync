@@ -17,6 +17,11 @@ spec:
       containers:
       - name: appointment-service
         image: 961341545391.dkr.ecr.ap-south-1.amazonaws.com/healthsync-appointment-service:${GITHUB_SHA}
+        env:
+          - name: AWS_DEFAULT_REGION
+            value: "ap-south-1"
+          - name: AWS_REGION
+            value: "ap-south-1"
         ports:
         - containerPort: 8080
 ---
