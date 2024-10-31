@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: notification-service
-        image: your-registry/notification-service:latest
+        image: 961341545391.dkr.ecr.ap-south-1.amazonaws.com/healthsync-notification-service:latest
         ports:
         - containerPort: 80
         resources:
