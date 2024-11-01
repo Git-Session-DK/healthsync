@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: data-aggregator
 spec:
-  schedule: "0 */6 * * *"  # Runs every 6 hours
+  schedule: "0 0 * * *"
   jobTemplate:
     spec:
       template:
@@ -14,4 +14,14 @@ spec:
             env:
               - name: AWS_REGION
                 value: "ap-south-1"
+              - name: CLUSTER_ID
+                value: "healthsync-analytics"
+              - name: DATABASE
+                value: "healthsync_analytics"
+              - name: PATIENT_SERVICE_URL
+                value: "http://patient-service-router"
+              - name: APPOINTMENT_SERVICE_URL
+                value: "http://appointment-service-router"
+              - name: NOTIFICATION_SERVICE_URL
+                value: "http://notification-service-router"
           restartPolicy: OnFailure
