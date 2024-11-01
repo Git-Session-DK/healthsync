@@ -41,13 +41,14 @@ jobs:
       env:
         GITHUB_SHA: ${{ github.sha }}
       run: |
-        envsubst < kubernetes/patient-service-blue.yml | kubectl apply -f -
-        envsubst < kubernetes/patient-service-green.yml | kubectl apply -f -
-        envsubst < kubernetes/appointment-service-blue.yml | kubectl apply -f -
-        envsubst < kubernetes/appointment-service-green.yml | kubectl apply -f -
-        envsubst < kubernetes/notification-service-blue.yml | kubectl apply -f -
-        envsubst < kubernetes/notification-service-green.yml | kubectl apply -f -
-        envsubst < kubernetes/aggregator-service-blue.yml | kubectl apply -f -
-        envsubst < kubernetes/aggregator-service-green.yml | kubectl apply -f -
-        kubectl apply -f kubernetes/router-services.yml
-        kubectl apply -f kubernetes/cronjobs/aggregator-cronjob.yml
+        envsubst < kubernetes/patient-service-blue.yml | kubectl apply -f - -n healthsync
+        envsubst < kubernetes/patient-service-green.yml | kubectl apply -f - -n healthsync
+        envsubst < kubernetes/appointment-service-blue.yml | kubectl apply -f - -n healthsync
+        envsubst < kubernetes/appointment-service-green.yml | kubectl apply -f - -n healthsync
+        envsubst < kubernetes/notification-service-blue.yml | kubectl apply -f - -n healthsync
+        envsubst < kubernetes/notification-service-green.yml | kubectl apply -f - -n healthsync
+        envsubst < kubernetes/aggregator-service-blue.yml | kubectl apply -f - -n healthsync
+        envsubst < kubernetes/aggregator-service-green.yml | kubectl apply -f - -n healthsync
+        kubectl apply -f kubernetes/router-services.yml -n healthsync
+        kubectl apply -f kubernetes/cronjobs/aggregator-cronjob.yml -n healthsync
+    
