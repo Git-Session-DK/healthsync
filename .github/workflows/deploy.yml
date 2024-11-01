@@ -28,9 +28,11 @@ jobs:
         docker build -t $ECR_REGISTRY/healthsync-patient-service:$GITHUB_SHA ./patient_record_service
         docker build -t $ECR_REGISTRY/healthsync-appointment-service:$GITHUB_SHA ./appointment_scheduling_service
         docker build -t $ECR_REGISTRY/healthsync-notification-service:$GITHUB_SHA ./notification_service
+        docker build -t $ECR_REGISTRY/healthsync-aggregator-service:$GITHUB_SHA ./aggregator_service
         docker push $ECR_REGISTRY/healthsync-patient-service:$GITHUB_SHA
         docker push $ECR_REGISTRY/healthsync-appointment-service:$GITHUB_SHA
         docker push $ECR_REGISTRY/healthsync-notification-service:$GITHUB_SHA
+        docker push $ECR_REGISTRY/healthsync-aggregator-service:$GITHUB_SHA
 
     - name: Update kube config
       run: aws eks update-kubeconfig --name healthsync-cluster --region ap-south-1
@@ -46,3 +48,4 @@ jobs:
         envsubst < kubernetes/notification-service-blue.yml | kubectl apply -f -
         envsubst < kubernetes/notification-service-green.yml | kubectl apply -f -
         kubectl apply -f kubernetes/router-services.yml
+        kubectl apply -f kubernetes/cronjobs/aggregator-cronjob.yml
