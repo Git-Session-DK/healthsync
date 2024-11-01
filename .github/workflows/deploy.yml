@@ -47,5 +47,7 @@ jobs:
         envsubst < kubernetes/appointment-service-green.yml | kubectl apply -f -
         envsubst < kubernetes/notification-service-blue.yml | kubectl apply -f -
         envsubst < kubernetes/notification-service-green.yml | kubectl apply -f -
+        envsubst < kubernetes/aggregator-service-blue.yml | kubectl apply -f -
+        envsubst < kubernetes/aggregator-service-green.yml | kubectl apply -f -
         kubectl apply -f kubernetes/router-services.yml
         kubectl apply -f kubernetes/cronjobs/aggregator-cronjob.yml
