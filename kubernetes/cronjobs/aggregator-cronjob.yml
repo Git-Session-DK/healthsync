@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: data-aggregator
+spec:
+  schedule: "0 */6 * * *"  # Runs every 6 hours
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: aggregator
+            image: 961341545391.dkr.ecr.ap-south-1.amazonaws.com/healthsync-aggregator-service:${GITHUB_SHA}
+            env:
+              - name: AWS_REGION
+                value: "ap-south-1"
+          restartPolicy: OnFailure

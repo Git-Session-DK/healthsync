@@ -1,23 +1,50 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import boto3
+from datetime import datetime
+from typing import Optional
 
 app = FastAPI()
 sns = boto3.client('sns')
 
-class Notification(BaseModel):
+class AppointmentReminder(BaseModel):
     phone_number: str
-    message: str
+    patient_name: str
+    doctor_name: str
+    appointment_date: str
+    appointment_time: str
 
-@app.post("/notifications/")
-async def send_notification(notification: Notification):
+class FollowUpNotification(BaseModel):
+    phone_number: str
+    patient_name: str
+    follow_up_details: str
+    recommended_date: str
+
+@app.post("/notifications/appointment-reminder")
+async def send_appointment_reminder(reminder: AppointmentReminder):
     try:
+        message = f"Hello {reminder.patient_name}, this is a reminder for your appointment with Dr. {reminder.doctor_name} on {reminder.appointment_date} at {reminder.appointment_time}."
         response = sns.publish(
-            PhoneNumber=notification.phone_number,
-            Message=notification.message
+            PhoneNumber=reminder.phone_number,
+            Message=message
         )
         return {
-            "message": "Notification sent successfully",
+            "message": "Appointment reminder sent successfully",
+            "message_id": response['MessageId']
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/notifications/follow-up")
+async def send_follow_up(follow_up: FollowUpNotification):
+    try:
+        message = f"Hello {follow_up.patient_name}, this is a follow-up reminder: {follow_up.follow_up_details}. Recommended follow-up date: {follow_up.recommended_date}"
+        response = sns.publish(
+            PhoneNumber=follow_up.phone_number,
+            Message=message
+        )
+        return {
+            "message": "Follow-up notification sent successfully",
             "message_id": response['MessageId']
         }
     except Exception as e:

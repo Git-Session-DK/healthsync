@@ -1,28 +1,39 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import boto3
-from typing import Optional
+from typing import Optional, List
 
-# Initialize FastAPI app
 app = FastAPI()
-
-# Initialize DynamoDB client
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('PatientRecords')
 
-# Define Patient model
+class LabResult(BaseModel):
+    date: str
+    test_name: str
+    result: str
+
+class Prescription(BaseModel):
+    medication: str
+    dosage: str
+    duration: str
+    date_prescribed: str
+
 class Patient(BaseModel):
     id: str
     name: str
     age: int
-    email: Optional[str] = None
-    medical_history: Optional[str] = None
+    email: str
+    phone: str
+    medical_history: List[str]
+    prescriptions: List[Prescription]
+    lab_results: List[LabResult]
+    conditions: List[str]
 
 @app.post("/patients/")
 async def create_patient(patient: Patient):
     try:
         table.put_item(Item=patient.dict())
-        return {"message": "Patient record created successfully", "patient_id": patient.id}
+        return {"message": "Patient record created", "patient_id": patient.id}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
